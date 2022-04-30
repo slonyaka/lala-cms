@@ -1,0 +1,28 @@
+version: '2'
+services:
+    web:
+        image: nginx:latest
+        ports:
+            - 7070:80
+        volumes:
+            - ./:/usr/share/nginx/html
+            - ./docker/nginx/laravel.conf:/etc/nginx/conf.d/default.conf
+        links:
+            - php
+            - mysql
+    php:
+        build: ./docker/php-fpm
+        volumes:
+            - ./:/usr/share/nginx/html
+    mysql:
+        build: ./docker/mysql
+        container_name: mysql
+        ports:
+            - 33099:3306
+        volumes:
+            - ./docker/data/mysql:/var/lib/mysql
+        environment:
+            MYSQL_DATABASE: test
+            MYSQL_USER: root
+            MYSQL_PASSWORD:
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
